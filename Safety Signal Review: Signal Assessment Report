@@ -1,0 +1,102 @@
+# Safety Signal Review: Signal Assessment Report
+
+**Dataset:** `adverse_drug_reactions_sample.csv` (synthetic aggregate data, 8 reports, 8 different suspect drugs)
+**Prepared by:** Hariharan M | **Date:** 29-Oct-2026
+**Files:** this report, [`safety-review-presentation.pptx`](safety-review-presentation.pptx) (five slides), and the source data CSV.
+**Purpose:** Screen the dataset, pick one potential signal for assessment, and set out follow-up. This note does not conclude causation.
+
+---
+
+## 1. Dataset summary
+
+| Item | Result |
+|---|---|
+| Total reports | 8 (ADR-9001 to ADR-9008) |
+| Patient age | 28 to 71 years (mean 52, median 51.5) |
+| Sex | Female 4, Male 4 |
+| Severity (as reported) | Mild 3, Moderate 2, Severe 2, Life-threatening 1 |
+| Outcome (as reported) | Recovered 3, Recovering 1, Not recovered 1, Hospitalized 3 |
+| Serious reports | 3 of 8 (37.5%): ADR-9003, ADR-9004, ADR-9007 |
+| Onset (days) | 1 to 30 (median 8.5) |
+| Reporter type | Physician 3, Pharmacist 2, Patient 2, Oncologist 1 |
+
+**Seriousness note:** I treated a report as serious when the source shows hospitalisation or a life-threatening reaction. "Severity" (Mild to Life-threatening) describes intensity, which is not the same as regulatory seriousness.
+
+**Patterns seen**
+- The 3 serious reports are all Severe or Life-threatening, and all had onset between 5 and 10 days.
+- All 3 serious reports involve drugs with well-known risks: ciprofloxacin (tendon), ibuprofen (GI bleeding), warfarin (bleeding).
+- Reporters were mostly healthcare professionals (6 of 8), which tends to give more reliable clinical detail.
+- **Reporting trends:** the dataset has no report dates, so a trend over time cannot be assessed. Onset time and reporter type are the only patterns available.
+
+## 2. Potential signal selected
+
+**Ciprofloxacin and tendonitis (ADR-9003)**
+
+A 71-year-old female, treated with ciprofloxacin for a urinary tract infection, developed tendonitis 7 days after starting. The reaction was rated severe and she was hospitalized. The report came from a physician.
+
+**Why I picked this one.** It is serious, the onset (7 days) is plausible for the drug, the reporter is a physician, and the patient's age (71) is a known risk factor for this type of reaction. Fluoroquinolone-associated tendon disorders are described in product labelling, so this would be reviewed as a **known association to confirm and monitor**, not as a new discovery. (Confirm against the current local label.)
+
+**Limits.** This is one report. With no denominator and no other cipro reports, no frequency or disproportionality can be calculated, so this is a screening observation only.
+
+## 3. Alternative explanations
+
+| Possible explanation | Why it matters |
+|---|---|
+| Age (71 years) | Tendon problems rise with age regardless of drug. |
+| Concomitant corticosteroids | Increase tendon risk, and use is not reported. |
+| Kidney function | Reduced clearance raises drug exposure, and is not reported. |
+| Underlying disease, injury or overuse | Tendonitis occurs without any drug. Activity history is unknown. |
+| Other drugs or conditions | No concomitant medication or medical history is supplied (for example diabetes). |
+| Reporting bias | Known drug warnings and media attention can increase reporting of expected reactions. |
+| The infection itself | UTI-related illness or inflammation may be a confounder, though less likely. |
+
+## 4. Follow-up evidence needed
+
+1. **Case follow-up (ADR-9003):** exact start and stop dates, dose, and duration; concomitant drugs (especially corticosteroids); medical history including renal function, diabetes and prior tendon problems; imaging or exam findings; whether tendon rupture occurred; dechallenge result (did it improve after stopping?); treatment given.
+2. **Database search:** all ciprofloxacin and other fluoroquinolone cases with tendon disorder terms in a larger safety database.
+3. **Disproportionality analysis:** compute a reporting ratio (PRR or ROR) once enough data is available.
+4. **Literature and label review:** published studies and current product labelling.
+5. **Epidemiology:** observational data on tendon-disorder incidence by age and corticosteroid use, if available.
+
+## 4b. Evidence grading (simple qualitative scale used for this exercise)
+
+| Evidence element | Rating | Reason |
+|---|---|---|
+| Number of cases | Weak | One report only |
+| Timing | Supportive | Onset 7 days after starting |
+| Prior knowledge | Strong (verify) | Described in labelling for this drug class |
+| Case detail | Limited | No dose, dates, concomitant drugs or history |
+| Other causes | Not excluded | Age, corticosteroids, kidney function and activity unknown |
+| Dechallenge / rechallenge | Not reported | Cannot judge response to stopping the drug |
+
+**Overall strength: low to moderate.** Case-level causality using the WHO-UMC categories: **Possible** (reasonable timing, but other causes are not excluded and there is no dechallenge information).
+
+## 5. Risk-minimization questions
+
+- Does the current label state the tendon risk clearly, including the higher risk in older patients and with corticosteroids?
+- Are prescribers and patients told to stop the drug and seek advice at the first tendon pain?
+- Is a fluoroquinolone appropriate for this indication when other treatment options exist? (Regulators have previously reviewed this for milder infections; verify current guidance.)
+- Would extra prescriber education or patient information help, and how would its effect be measured?
+
+## 6. Other observations (not selected)
+
+- **ADR-9007 warfarin, uncontrolled hemorrhage (life-threatening):** a known risk of the drug. Follow up on INR, interacting drugs, and dosing.
+- **ADR-9004 ibuprofen, gastric ulcer bleed (severe):** a known NSAID risk. Check dose, duration, and use with other bleeding-risk drugs, in a 28-year-old.
+- **ADR-9008 paclitaxel, peripheral neuropathy (not recovered):** a known chemotherapy effect, and the one unresolved case.
+
+## 7. Data-quality issues
+
+- Dose, dates, concomitant drugs, and medical history are all missing.
+- "Hospitalized" appears in the Outcome column, but it describes seriousness, not outcome. The real outcome is unknown.
+- ADR-9002: the text says "Severe Muscle Myalgia" but severity is "Moderate". This is inconsistent and should be queried.
+- ADR-9008: "Chemotherapy" is a treatment, not an indication. The cancer type is missing.
+- ADR-9001 ("Skin Rash & Hives") and ADR-9006 ("Nausea & Diarrhea") each hold two events, which should be coded as separate MedDRA terms.
+- Each drug appears only once, so no drug-level comparison is possible.
+
+## 8. Conclusion
+
+This small dataset gives one report worth following up: ciprofloxacin with tendonitis in a 71-year-old woman, a serious case with a plausible onset time. The data are consistent with a known label warning, but they cannot show that the drug caused the event, because of the single report, missing history and dose, and several other possible explanations. The recommended next step is case follow-up, then a larger database review.
+
+## 9. Short explanation
+
+I summarized the 8 reports, checked seriousness against hospitalisation and life-threatening criteria, and chose the case with serious outcome, plausible timing, and a known risk factor. I listed other explanations for the event, set out the follow-up evidence and risk-minimization questions, and flagged data gaps. I did not make any causal claim, and I noted that report dates are missing, so trends cannot be assessed.
